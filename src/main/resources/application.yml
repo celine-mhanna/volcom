@@ -1,0 +1,65 @@
+volcom:
+  env: "dev"
+  db:
+    reset: false
+    username: volcom_user
+    password: volcom_password
+    name: volcom
+    schema: volcom
+    host: localhost
+    port: 55432
+    url: "jdbc:postgresql://${volcom.db.host}:${volcom.db.port}/${volcom.db.name}?currentSchema=${volcom.db.schema}"
+    cleanup-schedule: "5 * * * *"
+
+spring:
+  application:
+    name: volcom
+  web:
+    resources:
+      static-locations: classpath:/public
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+    properties:
+      hibernate:
+        default_schema: ${volcom.db.schema}
+        jdbc:
+          batch_size: 50
+          lob:
+            non_contextual_creation: true #  https://stackoverflow.com/a/49261146
+  data:
+    rest:
+      basePath: /api
+      max-page-size: 100000
+
+
+  datasource:
+    url: ${volcom.db.url}
+    username: ${volcom.db.username}
+    password: ${volcom.db.password}
+
+  flyway:
+    enabled: true
+    url: ${volcom.db.url}
+    user: ${volcom.db.username}
+    password: ${volcom.db.password}
+    schemas: ${volcom.db.schema}
+    default-schema: ${volcom.db.schema}
+    create-schemas: true
+    baseline-on-migrate: true # allows creating schema history table automatically
+    locations: classpath:db/migration/{vendor}
+
+server:
+  error:
+    include-message: always
+
+logging:
+  level:
+    root: INFO
+  pattern:
+    level: "%5p %mdc"
+

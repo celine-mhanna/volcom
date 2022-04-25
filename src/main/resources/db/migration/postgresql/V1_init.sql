@@ -1,0 +1,21 @@
+CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;
+
+CREATE SEQUENCE volcom.hibernate_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+CREATE TABLE volcom.users (
+    id BIGINT NOT NULL PRIMARY KEY,
+    display_name CHARACTER VARYING(255) NOT NULL,
+    username CHARACTER VARYING(255) NOT NULL UNIQUE,
+    password CHARACTER(60) NOT NULL,
+    role CHARACTER VARYING(120) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    password_needs_reset BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
